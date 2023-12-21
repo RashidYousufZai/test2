@@ -55,7 +55,7 @@ const CreateUser = () => {
     },
     {
       label: "Create Users",
-      value: "createuser",
+      value: "creatuser",
     },
     {
       label: "Advertisement",

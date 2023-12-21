@@ -111,7 +111,7 @@ const AdminLayout = () => {
                 return <Route key={path} path={path} element={<Comments />} />;
               case "poll":
                 return <Route key={path} path={path} element={<Poll />} />;
-              case "createuser":
+              case "creatuser":
                 return (
                   <Route key={path} path={path} element={<CreateUser />} />
                 );
