@@ -1,5 +1,4 @@
-// Import necessary modules and components
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "antd";
 import { Route, Routes, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -52,39 +51,26 @@ const AdminLayout = () => {
       .get(`${API_URL}/user?id=${localStorage.getItem("id")}`)
       .then((user) => {
         if (user.data[0].role === "admin") {
-          setAccess([
-            "users",
-            "upload",
-            "topstories",
-            "breakingnews",
-            "report",
-            "content",
-            "live",
-            "ads",
-            "comment",
-            "poll",
-            "creatuser",
-          ]);
+          setAccess(user?.data[0]?.acsses);
+          // setAccess([
+          //   "users",
+          //   "upload",
+          //   "topstories",
+          //   "breakingnews",
+          //   "report",
+          //   "content",
+          //   "live",
+          //   "ads",
+          //   "comment",
+          //   "poll",
+          //   "creatuser",
+          //   "dashboard",
+          // ]);
         } else {
           setAccess(user?.data[0]?.acsses);
         }
       });
   }, [location]);
-
-  const accessibleRoutes = [
-    { path: "dashboard", element: <Dashboard /> },
-    { path: "users", element: <AdminTable /> },
-    { path: "upload", element: <Upload /> },
-    { path: "topstories", element: <TopStories /> },
-    { path: "breakingnews", element: <BreakingNews /> },
-    { path: "report", element: <Report /> },
-    { path: "content", element: <TagsAndCategory /> },
-    { path: "live", element: <Live /> },
-    { path: "ads", element: <Ads /> },
-    { path: "comment", element: <Comments /> },
-    { path: "poll", element: <Poll /> },
-    { path: "creatuser", element: <CreateUser /> },
-  ];
 
   return (
     <Layout>
@@ -94,16 +80,45 @@ const AdminLayout = () => {
       <Sider style={siderStyle2}></Sider>
       <Content style={contentStyle}>
         <Routes>
-          {/* <Route path={"dashboard"} element={<Dashboard />} /> */}
-          {accessibleRoutes
-            .filter((route) => access.includes(route.path))
-            .map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={route.element}
-              />
-            ))}
+          <Route path={"dashboard"} element={<Dashboard />} />
+          {access.map((path) => {
+            switch (path) {
+              case "users":
+                return (
+                  <Route key={path} path={path} element={<AdminTable />} />
+                );
+              case "upload":
+                return <Route key={path} path={path} element={<Upload />} />;
+              case "topstories":
+                return (
+                  <Route key={path} path={path} element={<TopStories />} />
+                );
+              case "breakingnews":
+                return (
+                  <Route key={path} path={path} element={<BreakingNews />} />
+                );
+              case "report":
+                return <Route key={path} path={path} element={<Report />} />;
+              case "content":
+                return (
+                  <Route key={path} path={path} element={<TagsAndCategory />} />
+                );
+              case "live":
+                return <Route key={path} path={path} element={<Live />} />;
+              case "ads":
+                return <Route key={path} path={path} element={<Ads />} />;
+              case "comment":
+                return <Route key={path} path={path} element={<Comments />} />;
+              case "poll":
+                return <Route key={path} path={path} element={<Poll />} />;
+              case "createuser":
+                return (
+                  <Route key={path} path={path} element={<CreateUser />} />
+                );
+              default:
+                return null; // Handle unknown paths if necessary
+            }
+          })}
           <Route
             path="*"
             element={<div style={{ color: "black" }}>No Access</div>}

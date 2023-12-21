@@ -31,20 +31,6 @@ const SideBar = () => {
       });
   }, [location]);
 
-  const adminRoutes = [
-    "users",
-    "upload",
-    "topstories",
-    "breakingnews",
-    "report",
-    "content",
-    "live",
-    "ads",
-    "comment",
-    "poll",
-    "creatuser",
-  ];
-
   const renderMenuItem = (key, icon, label, to) => {
     return (
       <Menu.Item key={key} icon={icon}>
@@ -65,39 +51,14 @@ const SideBar = () => {
 
   return (
     <Menu theme="dark" mode="inline">
-      {isAdmin
-        ? adminRoutes.map((route, index) =>
-            renderMenuItem(
-              index,
-              <BiRadioCircleMarked size={25} />,
-              route,
-              `/dashboard/${route}`
-            )
-          )
-        : access.map((route, index) =>
-            renderMenuItem(
-              index,
-              <BiRadioCircleMarked size={25} />,
-              route,
-              `/dashboard/${route}`
-            )
-          )}
-
-      {/* {role !== "author" && role !== "journalist" && (
-        <Menu.Item key="createuser" icon={<BiRadioCircleMarked size={25} />}>
-          <Link
-            style={{
-              textTransform: "uppercase",
-              fontSize: 14,
-              fontWeight: "600",
-              fontFamily: "Poppins",
-            }}
-            to="/dashboard/createuser"
-          >
-            CreateUser
-          </Link>
-        </Menu.Item>
-      )} */}
+      {access.map((route, index) =>
+        renderMenuItem(
+          index,
+          <BiRadioCircleMarked size={25} />,
+          route,
+          `/dashboard/${route}`
+        )
+      )}
 
       <Menu.Item
         style={{
