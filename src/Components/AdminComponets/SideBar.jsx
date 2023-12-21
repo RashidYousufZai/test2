@@ -7,6 +7,71 @@ import { API_URL } from "../../../API";
 import { RiAdminFill } from "react-icons/ri";
 import { BiRadioCircleMarked } from "react-icons/bi";
 import { CiLogout } from "react-icons/ci";
+import { MdOutlineArticle } from "react-icons/md";
+import { FaRegWindowRestore } from "react-icons/fa";
+import { LiaAdSolid } from "react-icons/lia";
+import { AiOutlineComment } from "react-icons/ai";
+import { CgPoll } from "react-icons/cg";
+import { MdUploadFile, MdOutlineCreateNewFolder } from "react-icons/md";
+import { FaRegNewspaper } from "react-icons/fa6";
+import { RiLiveLine } from "react-icons/ri";
+
+// Placeholder components for each route
+const YourDashboardIconComponent = () => (
+  <>
+    <MdOutlineArticle size={25} style={{ margin: "5px" }} />
+  </>
+);
+const YourUsersIconComponent = () => (
+  <>
+    <MdOutlineCreateNewFolder size={25} style={{ margin: "5px" }} />
+  </>
+);
+const YourTopStoriesIconComponent = () => (
+  <>
+    <FaRegWindowRestore size={20} style={{ margin: "5px" }} />
+  </>
+);
+const YourBreakingNewsIconComponent = () => (
+  <>
+    <FaRegNewspaper size={20} style={{ margin: "5px" }} />
+  </>
+);
+const YourUploadIconComponent = () => (
+  <>
+    <MdUploadFile size={25} style={{ margin: "5px" }} />
+  </>
+);
+const YourCreateUserIconComponent = () => (
+  <>
+    <MdOutlineCreateNewFolder size={25} style={{ margin: "5px" }} />
+  </>
+);
+const YourContentIconComponent = () => (
+  <>
+    <MdOutlineCreateNewFolder size={25} style={{ margin: "5px" }} />
+  </>
+);
+const YourAdsIconComponent = () => (
+  <>
+    <LiaAdSolid size={25} style={{ margin: "5px" }} />
+  </>
+);
+const YourCommentIconComponent = () => (
+  <>
+    <AiOutlineComment size={25} style={{ margin: "5px" }} />
+  </>
+);
+const YourLiveIconComponent = () => (
+  <>
+    <RiLiveLine size={25} style={{ margin: "5px" }} />
+  </>
+);
+const YourPollIconComponent = () => (
+  <>
+    <CgPoll size={25} style={{ margin: "5px" }} />
+  </>
+);
 
 const SideBar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -31,23 +96,37 @@ const SideBar = () => {
       });
   }, [location]);
 
-  // Map route names to display labels
   const routeLabels = {
-    users: "Create User",
-    upload: "Upload",
+    dashboard: "Articles",
+    users: "Users",
     topstories: "Top Stories",
     breakingnews: "Breaking News",
-    report: "Report",
+    upload: "Upload",
+    creatuser: "Create User",
     content: "Tags&Category",
-    live: "Live",
     ads: "Advertisement",
     comment: "Comments",
+    live: "Live",
     poll: "Poll",
-    creatuser: "Create User",
-    dashboard: "Articles",
   };
 
-  const renderMenuItem = (key, icon, route, to) => {
+  const desiredOrder = [
+    "dashboard",
+    "users",
+    "topstories",
+    "breakingnews",
+    "upload",
+    "creatuser",
+    "content",
+    "ads",
+    "comment",
+    "live",
+    "poll",
+  ];
+
+  const sortedAccess = access.filter((route) => desiredOrder.includes(route));
+
+  const renderMenuItem = (key, route, to, icon) => {
     return (
       <Menu.Item key={key} icon={icon}>
         <Link
@@ -67,14 +146,49 @@ const SideBar = () => {
 
   return (
     <Menu theme="dark" mode="inline">
-      {access.map((route, index) =>
-        renderMenuItem(
-          index,
-          <BiRadioCircleMarked size={25} />,
-          route,
-          `/dashboard/${route}`
-        )
-      )}
+      {sortedAccess.map((route, index) => {
+        let icon;
+        switch (route) {
+          case "dashboard":
+            icon = <YourDashboardIconComponent />;
+            break;
+          case "users":
+            icon = <YourUsersIconComponent />;
+            break;
+          case "topstories":
+            icon = <YourTopStoriesIconComponent />;
+            break;
+          case "breakingnews":
+            icon = <YourBreakingNewsIconComponent />;
+            break;
+          case "upload":
+            icon = <YourUploadIconComponent />;
+            break;
+          case "creatuser":
+            icon = <YourCreateUserIconComponent />;
+            break;
+          case "content":
+            icon = <YourContentIconComponent />;
+            break;
+          case "ads":
+            icon = <YourAdsIconComponent />;
+            break;
+          case "comment":
+            icon = <YourCommentIconComponent />;
+            break;
+          case "live":
+            icon = <YourLiveIconComponent />;
+            break;
+          case "poll":
+            icon = <YourPollIconComponent />;
+            break;
+          default:
+            icon = <BiRadioCircleMarked size={25} />;
+            break;
+        }
+
+        return renderMenuItem(index, route, `/dashboard/${route}`, icon);
+      })}
 
       <Menu.Item
         style={{
