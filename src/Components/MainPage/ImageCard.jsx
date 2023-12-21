@@ -1,0 +1,21 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
+const ImageCard = ({ width, height, img, text, style, border,id }) => {
+  const navigate = useNavigate();
+  let title = text?.split(" ").join("-");
+  return (
+    <div
+      className="image-box"
+      style={{ width, height, borderRadius: border, cursor: "pointer" }}
+      onClick={() => navigate(`/details/${title}?id=${id}`)}
+    >
+      <img src={img} alt="" style={{ borderRadius: border }} />
+      <div className="image-text-box">
+        <div style={style}>{text}</div>
+      </div>
+    </div>
+  );
+};
+
+export default ImageCard;
