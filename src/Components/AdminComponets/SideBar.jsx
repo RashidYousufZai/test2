@@ -31,7 +31,23 @@ const SideBar = () => {
       });
   }, [location]);
 
-  const renderMenuItem = (key, icon, label, to) => {
+  // Map route names to display labels
+  const routeLabels = {
+    users: "Create User",
+    upload: "Upload",
+    topstories: "Top Stories",
+    breakingnews: "Breaking News",
+    report: "Report",
+    content: "Content",
+    live: "Live",
+    ads: "Advertisement",
+    comment: "Comments",
+    poll: "Poll",
+    creatuser: "Create User",
+    dashboard: "Articles",
+  };
+
+  const renderMenuItem = (key, icon, route, to) => {
     return (
       <Menu.Item key={key} icon={icon}>
         <Link
@@ -43,7 +59,7 @@ const SideBar = () => {
           }}
           to={to}
         >
-          {label}
+          {routeLabels[route] || route}
         </Link>
       </Menu.Item>
     );
