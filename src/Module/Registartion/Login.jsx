@@ -18,8 +18,8 @@ export const Login = () => {
       .get(`${API_URL}/user?id=${localStorage.getItem("id")}`)
       .then((user) => {
         console.log(user.data);
-        if (user.data[0].role != "user") {
-          navigate("/dashboard/users");
+        if (user.data[0].role != "admin") {
+          navigate("/");
         } else {
           navigate("/");
         }
@@ -36,7 +36,13 @@ export const Login = () => {
       .then((data) => {
         console.log(data);
         localStorage.setItem("id", data.data._id);
-        navigate(`${data.data.role == "user" ? "/" : "/dashboard"}`);
+        navigate(
+          `${
+            data.data.role == "user"
+              ? "/dashboard/dashboard"
+              : "/dashboard/dashboard"
+          }`
+        );
       })
       .catch((err) => {
         message.error("Enter Correct Email or Password");

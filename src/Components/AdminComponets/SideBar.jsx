@@ -38,7 +38,7 @@ const SideBar = () => {
     topstories: "Top Stories",
     breakingnews: "Breaking News",
     report: "Report",
-    content: "Content",
+    content: "Tags&Category",
     live: "Live",
     ads: "Advertisement",
     comment: "Comments",
