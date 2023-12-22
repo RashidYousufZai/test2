@@ -274,6 +274,7 @@ const MainPage = () => {
                   onClick={() => {
                     setShowItem(false);
                     setTimeout(() => {
+                      p;
                       setShowItem(true);
                       setSliderItem(1);
                     }, 1000);
