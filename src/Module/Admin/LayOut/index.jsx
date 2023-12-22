@@ -16,6 +16,7 @@ import Comments from "../pages/Comments";
 import Live from "../pages/Live";
 import Poll from "../pages/Poll";
 import { API_URL } from "../../../../API";
+import FlashNews from "../pages/FlashNews";
 
 const { Sider, Content } = Layout;
 
@@ -111,6 +112,8 @@ const AdminLayout = () => {
                 return <Route key={path} path={path} element={<Comments />} />;
               case "poll":
                 return <Route key={path} path={path} element={<Poll />} />;
+              case "flashnews":
+                return <Route key={path} path={path} element={<FlashNews />} />;
               case "creatuser":
                 return (
                   <Route key={path} path={path} element={<CreateUser />} />

@@ -19,7 +19,12 @@ const VideoCard = ({ color, height, width, width2, data }) => {
             <source src={data.image} />
           </video>
         ) : (
-          <img src={img1} alt="" className="video-card-img" />
+          <img
+            src={img1}
+            style={{ height, width }}
+            alt=""
+            className="video-card-img"
+          />
         )}
         {!data && (
           <div className="video-card-length">

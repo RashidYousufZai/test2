@@ -2,30 +2,35 @@ import React, { useEffect, useState } from "react";
 import "./style/index.css";
 import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
 import { FaRegCirclePlay, FaGreaterThan } from "react-icons/fa6";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import VideoCard from "../../Components/MainPage/VideoCard";
 import ImageCard from "../../Components/MainPage/ImageCard";
+import StoriesCard from "../../Components/MainPage/StoriesCard";
+import NewsCard from "../../Components/MainPage/NewsCard";
+import { useTranslation } from "react-i18next";
+import axios from "axios";
+import { Col, Progress, Radio, Row } from "antd";
+import { API_URL } from "../../../API";
+import { useNavigate } from "react-router-dom";
+
 import img1 from "../../assets/img-main1.png";
 import img2 from "../../assets/img-main-2.png";
 import img3 from "../../assets/Rectangle 33.png";
 import img4 from "../../assets/Rectangle 28.png";
 import img5 from "../../assets/img-5.png";
 import img6 from "../../assets/Group 50.png";
-import Mac from "../../assets/Rectangle 86.png";
 import img7 from "../../assets/Rectangle 67.png";
 import img8 from "../../assets/Rectangle 50.png";
 import slider from "../../assets/slider (2).png";
-import StoriesCard from "../../Components/MainPage/StoriesCard";
-import NewsCard from "../../Components/MainPage/NewsCard";
-import { useTranslation } from "react-i18next";
-import axios from "axios";
-import { Col, Modal, Progress, Radio, Row } from "antd";
-import { API_URL } from "../../../API";
-import { useNavigate } from "react-router-dom";
 
 const MainPage = () => {
   const [sliderItem, setSliderItem] = useState(0);
+  const [imag1, setimag1] = useState();
   const [showItem, setShowItem] = useState(true);
   const [userData, setUserData] = useState([]);
+  const [flashnews, setflashnews] = useState([]);
   const [Article, setArticle] = useState([]);
   const [video, setVideo] = useState([]);
   const [latestNews, setLatestNews] = useState([]);
@@ -37,6 +42,8 @@ const MainPage = () => {
   const [midAd, setMidAd] = useState({});
   const [bottomAd, setBottomAd] = useState({});
   const navigation = useNavigate();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   useEffect(() => {
     axios.get(`${API_URL}/ads?active=true&side=mid`).then((data) => {
       console.log(data.data, "mid");
@@ -91,6 +98,15 @@ const MainPage = () => {
   }, []);
   useEffect(() => {
     axios
+      .get(`${API_URL}/flashnews`)
+      .then((users) => {
+        setflashnews(users.data);
+      })
+      .catch((err) => {
+        console.log("err=>>>", err);
+      });
+
+    axios
       .get(`${API_URL}/poll`)
       .then((users) => {
         setUserData(users.data.reverse()[0]);
@@ -99,7 +115,21 @@ const MainPage = () => {
         console.log("err=>>>", err);
       });
   }, []);
-  console.log(userData);
+
+  const handlePrevClick = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? flashnews.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNextClick = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === flashnews.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+  console.log(Article.length > 0 ? Article[0].image : null);
+
+  console.log(flashnews);
   return (
     <>
       <div className="main-page-conatiner">
@@ -107,12 +137,16 @@ const MainPage = () => {
           <div className="main-page-flash-news container">
             <div className="flash-news-1">{t("fn")}</div>
             <div className="flash-news-2">
-              <div className="flash-news-2-text">
-                पुरानी पेंशन योजना की बहाली को लेकर आज रामलीला मैदान में रैली
-              </div>
-              <div className="flash-news-2-icons">
-                <IoMdArrowDropleft size={25} />
-                <IoMdArrowDropright size={25} />
+              <div className="flash-news-slider">
+                <div className="flash-news-2-text">
+                  {flashnews.length > 0 && (
+                    <p>{flashnews[currentIndex].slugName}</p>
+                  )}
+                </div>
+                <div className="flash-news-2-icons">
+                  <IoMdArrowDropleft size={25} onClick={handlePrevClick} />
+                  <IoMdArrowDropright size={25} onClick={handleNextClick} />
+                </div>
               </div>
             </div>
           </div>
@@ -454,7 +488,8 @@ const MainPage = () => {
               <div className="divider"></div>
             </div>
             <div className="video-box">
-              <div className="video-items-box">
+              <VideoCard height={400} width={500} data={video && video[3]} />
+              {/* <div className="video-items-box">
                 <FaRegCirclePlay size={50} color="red" style={{ zIndex: 1 }} />
                 <div className="video-text-box">
                   <div>
@@ -462,14 +497,14 @@ const MainPage = () => {
                     Cup Exit: Report
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="divider-box">
               <div className="divider"></div>
             </div>
             <div className="video-card-box-1">
-              <VideoCard data={video && video[2]} />
-              <VideoCard data={video && video[3]} />
+              <VideoCard data={video && video[4]} />
+              <VideoCard data={video && video[5]} />
             </div>
           </div>
         </div>
@@ -658,19 +693,38 @@ const MainPage = () => {
             </div>
           </div>
         </div>
+
         <div className="main-video-gallery-main-container container2 container3">
           <div className="main-page-video-heading2">{t("ph")}</div>
-          <div className="main-video-gallery-imgs">
-            <img src={img8} alt="" />
-            <img src={img8} alt="" />
-            <img src={img8} alt="" />
-            <img src={img8} alt="" />
-            <img src={img8} alt="" />
-            <img src={img8} alt="" />
-            <img src={img8} alt="" />
-            <img src={img8} alt="" />
-          </div>
-          <div className="scroll-line"></div>
+          <Slider
+            className="main-video-gallery-imgs"
+            dots={true}
+            infinite={true}
+            slidesToShow={4}
+            slidesToScroll={1}
+          >
+            <div>
+              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
+            </div>
+            <div>
+              <img src={Article.length > 0 ? Article[1].image : null} alt="" />
+            </div>
+            <div>
+              <img src={Article.length > 0 ? Article[2].image : null} alt="" />
+            </div>
+            <div>
+              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
+            </div>
+            <div>
+              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
+            </div>
+            <div>
+              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
+            </div>
+            <div>
+              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
+            </div>
+          </Slider>
         </div>
       </div>
       {/* <Modal

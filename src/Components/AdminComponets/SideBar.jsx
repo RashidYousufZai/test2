@@ -108,6 +108,7 @@ const SideBar = () => {
     comment: "Comments",
     live: "Live",
     poll: "Poll",
+    flashnews: "Flash News",
   };
 
   const desiredOrder = [
@@ -117,6 +118,7 @@ const SideBar = () => {
     "breakingnews",
     "upload",
     "creatuser",
+    "flashnews",
     "content",
     "ads",
     "comment",
@@ -165,6 +167,9 @@ const SideBar = () => {
             icon = <YourUploadIconComponent />;
             break;
           case "creatuser":
+            icon = <YourCreateUserIconComponent />;
+            break;
+          case "flashnews":
             icon = <YourCreateUserIconComponent />;
             break;
           case "content":
