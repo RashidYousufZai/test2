@@ -11,9 +11,11 @@ import StoriesCard from "../../Components/MainPage/StoriesCard";
 import NewsCard from "../../Components/MainPage/NewsCard";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { Col, Progress, Radio, Row } from "antd";
+import { Col, Modal, Progress, Radio, Row } from "antd";
 import { API_URL } from "../../../API";
 import { useNavigate } from "react-router-dom";
+import { Card } from "antd";
+const { Meta } = Card;
 
 import img1 from "../../assets/img-main1.png";
 import img2 from "../../assets/img-main-2.png";
@@ -35,7 +37,7 @@ const MainPage = () => {
   const [video, setVideo] = useState([]);
   const [latestNews, setLatestNews] = useState([]);
   const [ArticleTop, setArticleTop] = useState(null);
-  const [isModal2Open, setIsModal2Open] = useState(false);
+  const [isModal2Open, setIsModal2Open] = useState(true);
   const [val, setVal] = useState("");
   const sliderItems = [slider, img1, img2, img4];
   const { t } = useTranslation();
@@ -43,6 +45,56 @@ const MainPage = () => {
   const [bottomAd, setBottomAd] = useState({});
   const navigation = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentPoll, setCurrentPoll] = useState(null);
+  const [pollOptions, setPollOptions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [stories, setStories] = useState(null);
+
+  useEffect(() => {
+    // Fetch stories when the component mounts
+    const fetchStories = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/story`);
+        setStories(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching stories:", error);
+      }
+    };
+    console.log(stories);
+    fetchStories();
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/polls`)
+      .then((response) => {
+        const pollsData = response.data;
+        const latestPoll = pollsData.length > 0 ? pollsData[0] : null;
+        setCurrentPoll(latestPoll);
+        setPollOptions(latestPoll ? latestPoll.options : []);
+      })
+      .catch((error) => {
+        console.error("Error fetching polls:", error);
+        // Handle error
+      });
+  }, []);
+
+  const submitVote = async (pollId, optionIndex) => {
+    try {
+      // Call the backend API to update total votes
+      const response = await axios.post(`${API_URL}/polls/${pollId}/vote`, {
+        pollId,
+        optionIndex,
+      });
+
+      // Handle the response if needed
+      console.log(response.data);
+    } catch (error) {
+      // Handle errors if the API call fails
+      console.error("Error submitting vote:", error);
+    }
+  };
 
   useEffect(() => {
     axios.get(`${API_URL}/ads?active=true&side=mid`).then((data) => {
@@ -178,21 +230,18 @@ const MainPage = () => {
               </div>
             </div>
             <div className="main-page-slider-setting">
-              {sliderItem == 1 ? (
+              {sliderItem === 1 ? (
                 <div
                   style={{
-                    height: "270px",
-                    width: "100%",
-                    // justifyContent: "center",
-                    alignItems: "center",
-                    display: "flex",
-                    flexDirection: "column",
-                    backgroundColor: "rgba(0,0,0,0.1)",
-                    borderRadius: 10,
+                    width: "400px",
+                    height: "180px",
+                    background: "White",
                     marginTop: 10,
+                    borderRadius: 10,
+                    padding: 10,
                   }}
                 >
-                  {/* <div
+                  <div
                     style={{
                       fontWeight: "600",
                       fontSize: 18,
@@ -200,86 +249,60 @@ const MainPage = () => {
                       fontFamily: "Poppins",
                     }}
                   >
-                    {userData?.question}
+                    {currentPoll.question}
                   </div>
-                  <Radio.Group style={{display:"flex",flexDirection:"column"}}>
-                    {userData.options.map((e,i)=>{
-                      return (
-                       e ==""?<></>: <Radio value={i}>{e}</Radio>
-                      )
-                    })}
-                  </Radio.Group> */}
-                  <div
-                    style={{
-                      width: "400px",
-                      height: "180px",
-                      background: "White",
-                      marginTop: 10,
-                      borderRadius: 10,
-                      padding: 10,
-                    }}
+                  <Radio.Group
+                    value={selectedOption}
+                    style={{ width: "100%", marginTop: "20px" }}
                   >
-                    <div
-                      style={{
-                        fontWeight: "600",
-                        fontSize: 18,
-                        textAlign: "start",
-                        fontFamily: "Poppins",
-                      }}
-                    >
-                      {userData?.question}
-                    </div>
-                    <Radio.Group
-                      value={val ? val : null}
-                      style={{ width: "100%", marginTop: "20px" }}
-                    >
-                      <Row gutter={12}>
-                        {userData.options.map((e, i) => {
-                          return e == "" ? (
-                            <></>
-                          ) : (
-                            <Col xs={12}>
+                    <Row gutter={12}>
+                      {pollOptions.map((option, index) => (
+                        <Col xs={12} key={index}>
+                          <div
+                            style={{
+                              width: "90%",
+                              height: "40px",
+                              borderRadius: 10,
+                              border: "1px solid black",
+                              marginBottom: 10,
+                              alignItems: "center",
+                              display: "flex",
+                              paddingLeft: "10px",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            <Radio
+                              onClick={() => {
+                                if (selectedOption === null) {
+                                  setSelectedOption(index);
+                                  submitVote(currentPoll._id, index);
+                                }
+                              }}
+                              value={index}
+                              disabled={selectedOption !== null}
+                            >
                               <div
-                                key={i}
                                 style={{
-                                  width: "90%",
-                                  height: "40px",
-                                  borderRadius: 10,
-                                  border: "1px solid black",
-                                  marginBottom: 10,
-                                  alignItems: "center",
-                                  display: "flex",
-                                  paddingLeft: "10px",
-                                  textTransform: "capitalize",
+                                  fontSize: "18px",
+                                  fontWeight: "600",
+                                  marginTop: "-10px",
                                 }}
                               >
-                                <Radio
-                                  onClick={() =>
-                                    val == e ? setVal("") : setVal(e)
-                                  }
-                                  value={e}
-                                  disabled={
-                                    val ? (val == e ? false : true) : false
-                                  }
-                                >
-                                  <div
-                                    style={{
-                                      fontSize: "18px",
-                                      fontWeight: "600",
-                                      marginTop: "-10px",
-                                    }}
-                                  >
-                                    {e}
-                                  </div>
-                                </Radio>
-                                {val && <Progress percent={30} size="small" />}
+                                {option.optionText}
                               </div>
-                            </Col>
-                          );
-                        })}
-                      </Row>
-                    </Radio.Group>
-                  </div>
+                            </Radio>
+
+                            {selectedOption !== null && (
+                              <Progress
+                                percent={option.percentage.toFixed(0)} // Adjust the decimal places as needed
+                                size="small"
+                              />
+                            )}
+                          </div>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Radio.Group>
                 </div>
               ) : (
                 <img
@@ -289,55 +312,21 @@ const MainPage = () => {
                 />
               )}
               <div className="main-page-slider-items">
-                <div
-                  className={`slider-item ${
-                    sliderItem == 0 ? "slider-item-active" : ""
-                  }`}
-                  onClick={() => {
-                    setShowItem(false);
-                    setTimeout(() => {
-                      setShowItem(true);
-                      setSliderItem(0);
-                    }, 1000);
-                  }}
-                ></div>
-                <div
-                  className={`slider-item ${
-                    sliderItem == 1 ? "slider-item-active" : ""
-                  }`}
-                  onClick={() => {
-                    setShowItem(false);
-                    setTimeout(() => {
-                      p;
-                      setShowItem(true);
-                      setSliderItem(1);
-                    }, 1000);
-                  }}
-                ></div>
-                <div
-                  className={`slider-item ${
-                    sliderItem == 2 ? "slider-item-active" : ""
-                  }`}
-                  onClick={() => {
-                    setShowItem(false);
-                    setTimeout(() => {
-                      setShowItem(true);
-                      setSliderItem(2);
-                    }, 1000);
-                  }}
-                ></div>
-                <div
-                  className={`slider-item ${
-                    sliderItem == 3 ? "slider-item-active" : ""
-                  }`}
-                  onClick={() => {
-                    setShowItem(false);
-                    setTimeout(() => {
-                      setShowItem(true);
-                      setSliderItem(3);
-                    }, 1000);
-                  }}
-                ></div>
+                {[0, 1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className={`slider-item ${
+                      sliderItem === item ? "slider-item-active" : ""
+                    }`}
+                    onClick={() => {
+                      setShowItem(false);
+                      setTimeout(() => {
+                        setShowItem(true);
+                        setSliderItem(item);
+                      }, 1000);
+                    }}
+                  ></div>
+                ))}
               </div>
             </div>
             <div className="more-text">
@@ -625,73 +614,32 @@ const MainPage = () => {
           <div className="visual-stories-main-container2 container3">
             <div className="visual-stories-main-container-part1">
               <div
-                style={{
-                  margin: "0 7px",
-                }}
                 className="visual-stories-main-container-main-area"
-              >
-                <ImageCard
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 400,
-                    height: "60px",
-                  }}
-                  height="270px"
-                  width="250px"
-                  border="10px"
-                  img={img6}
-                  text="iPhone 15, iPhone 15 Plus, iPhone 15 Pro, iPhone 15 Pro Max Preord..."
-                />
-              </div>
-              <div
                 style={{
-                  margin: "0 7px",
+                  display: "flex", // Set display to flex
+                  flexWrap: "wrap", // Allow wrapping to the next line
                 }}
-                className="visual-stories-main-container-main-area"
               >
-                <ImageCard
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 400,
-                    height: "60px",
-                  }}
-                  height="270px"
-                  width="250px"
-                  border="10px"
-                  img={img6}
-                  text="iPhone 15, iPhone 15 Plus, iPhone 15 Pro, iPhone 15 Pro Max Preord..."
-                />
+                {stories &&
+                  stories.length > 0 &&
+                  stories.map((story) => (
+                    <Col span={8} key={story._id}>
+                      <Card
+                        hoverable
+                        style={{ marginBottom: 16, flex: 1 }}
+                        cover={<img alt={story.title} src={story.image} />}
+                      >
+                        <Meta
+                          title={story.title}
+                          description="www.instagram.com"
+                        />
+                      </Card>
+                    </Col>
+                  ))}
               </div>
-              <div
-                style={{
-                  margin: "0 7px",
-                }}
-                className="visual-stories-main-container-main-area"
-              >
-                <ImageCard
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 400,
-                    height: "60px",
-                  }}
-                  height="270px"
-                  width="250px"
-                  border="10px"
-                  img={img6}
-                  text="iPhone 15, iPhone 15 Plus, iPhone 15 Pro, iPhone 15 Pro Max Preord..."
-                />
-              </div>
-            </div>
-            <div className="visual-stories-main-container-part2">
-              <a href={midAd?.link} target="_blank">
-                <img
-                  style={{ cursor: "pointer" }}
-                  src={bottomAd?.imgLink}
-                  alt=""
-                />
-              </a>
             </div>
           </div>
+          {/* ... (your existing JSX code) */}
         </div>
 
         <div className="main-video-gallery-main-container container2 container3">
@@ -728,21 +676,21 @@ const MainPage = () => {
         </div>
       </div>
       {/* <Modal
-          title="Polling Modal"
-          open={isModal2Open}
-          onCancel={handleCancel2}
-          onOk={()=>{
-            sessionStorage.setItem("data","yes")
-            handleCancel2()
-          }}
-        >
-          <div>{userData.question}</div>
-          <Radio.Group>
+        title="Polling Modal"
+        open={isModal2Open}
+        onCancel={handleCancel2}
+        onOk={() => {
+          sessionStorage.setItem("data", "yes");
+          handleCancel2();
+        }}
+      >
+        <div>{userData.question}</div>
+        <Radio.Group>
           <Radio value={1}>{userData.option1}</Radio>
           <br />
           <Radio value={2}>{userData.option2}</Radio>
-          </Radio.Group>
-        </Modal> */}
+        </Radio.Group>
+      </Modal> */}
     </>
   );
 };

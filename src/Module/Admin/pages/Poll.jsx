@@ -1,3 +1,5 @@
+// Poll.js
+
 import {
   Button,
   Card,
@@ -5,10 +7,8 @@ import {
   Input,
   Modal,
   Row,
-  Select,
   Space,
   Table,
-  Tag,
   message,
 } from "antd";
 import axios from "axios";
@@ -17,46 +17,13 @@ import { API_URL } from "../../../../API";
 
 const Poll = () => {
   const [userData, setUserData] = useState([]);
-  const [filterItem, setfilterItem] = useState("");
+  const [filterItem, setFilterItem] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [text, setText] = useState("");
   const [question, setQuestion] = useState("");
-  const [option1, setOption1] = useState("");
-  const [option2, setOption2] = useState("");
-  const [option3, setOption3] = useState("");
-  const [option4, setOption4] = useState("");
-  const [optionLen, setOptionLen] = useState(2);
-  const [options, setOptions] = useState([
-    { option1: "", option2: "", option3: "", option4: "" },
-  ]);
-  useEffect(() => {
-    axios
-      .get(`${API_URL}/poll`)
-      .then((users) => {
-        setUserData(users.data.reverse());
-        console.log(users);
-      })
-      .catch((err) => {
-        console.log("err=>>>", err);
-      });
-  }, []);
+  const [options, setOptions] = useState([{ text: "" }, { text: "" }]);
 
-  const onAdd = () => {
-    axios
-      .post(`${API_URL}/poll`, {
-        question: question,
-        options: [option1, option2, option3&&option3, option4&&option4],
-      })
-      .then((users) => {
-        setUserData(users.data.data);
-        message.success("Successfully Added");
-        handleCancel();
-      })
-      .catch((err) => {
-        console.log(err);
-        message.error("Successfully Not Added");
-      });
-  };
+  console.log(userData);
+
   const columns = [
     {
       title: "ID",
@@ -73,14 +40,59 @@ const Poll = () => {
       title: "Options",
       dataIndex: "options",
       key: "options",
+      render: (_, record) => (
+        <ul>
+          {record.options.map((option, index) => (
+            <li key={index}>
+              {option.optionText} - Votes: {option.votes}, Percentage:{" "}
+              {option.percentage.toFixed(0)}%
+            </li>
+          ))}
+        </ul>
+      ),
     },
   ];
+
   const showModal = () => {
     setIsModalOpen(true);
   };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  const createPoll = async () => {
+    try {
+      const response = await axios.post(`${API_URL}/polls`, {
+        question,
+        options: options.map((option) => ({
+          optionText: option.text,
+          votes: 0, // Assuming you want to initialize votes to 0
+          percentage: 0, // Assuming you want to initialize percentage to 0
+        })),
+      });
+      console.log(response);
+
+      // rest of the code
+    } catch (error) {
+      // error handling
+    }
+  };
+
+  const getAllPolls = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/polls`);
+      const pollsData = response.data;
+      setUserData(pollsData);
+    } catch (error) {
+      console.error("Error fetching polls:", error);
+      message.error("Failed to fetch polls. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getAllPolls();
+  }, []);
 
   return (
     <>
@@ -114,72 +126,37 @@ const Poll = () => {
       </Card>
       <Modal
         title="Upload Poll"
-        open={isModalOpen}
-        onOk={onAdd}
+        visible={isModalOpen}
+        onOk={createPoll}
         onCancel={handleCancel}
       >
         <Input
           value={question}
-          style={{
-            width: 310,
-            height: 50,
-          }}
+          style={{ width: 310, height: 50 }}
           placeholder="Enter Your Question"
           onChange={(e) => setQuestion(e.target.value)}
         />
         <br />
-        <Input
-          value={option1}
-          style={{
-            width: 150,
-            height: 50,
-            marginTop: 10,
-            marginRight: 10,
-          }}
-          placeholder="Enter Option 1"
-          onChange={(e) => setOption1(e.target.value)}
-        />
-        <Input
-          value={option2}
-          style={{
-            width: 150,
-            height: 50,
-            marginTop: 10,
-          }}
-          placeholder="Enter Option 2"
-          onChange={(e) => setOption2(e.target.value)}
-        />
+        {options.map((option, index) => (
+          <Input
+            key={index}
+            value={option.text}
+            style={{ width: 150, height: 50, marginTop: 10, marginRight: 10 }}
+            placeholder={`Enter Option ${index + 1}`}
+            onChange={(e) => {
+              const newOptions = [...options];
+              newOptions[index].text = e.target.value;
+              setOptions(newOptions);
+            }}
+          />
+        ))}
         <br />
-        {optionLen>=3&&<Input
-          value={option3}
-          style={{
-            width: 150,
-            height: 50,
-            marginTop: 10,
-            marginRight: 10,
-          }}
-          placeholder="Enter Option 3"
-          onChange={(e) => setOption3(e.target.value)}
-        />}
-       {
-        optionLen==4&& <Input
-        value={option4}
-        style={{
-          width: 150,
-          height: 50,
-          marginTop: 10,
-        }}
-        placeholder="Enter Option 4"
-        onChange={(e) => setOption4(e.target.value)}
-      />
-       }
-        {
-          optionLen==4?<div>
-          <a onClick={()=>setOptionLen(optionLen-1)} href="javascript:void(0)">option less</a>
-        </div>:<div>
-          <a onClick={()=>setOptionLen(optionLen+1)} href="javascript:void(0)">Add New</a>
-        </div>
-        }
+        <a
+          onClick={() => setOptions([...options, { text: "" }])}
+          href="javascript:void(0)"
+        >
+          Add New Option
+        </a>
       </Modal>
     </>
   );

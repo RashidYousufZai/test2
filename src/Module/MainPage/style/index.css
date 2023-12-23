@@ -269,7 +269,7 @@
   display: flex;
 }
 .visual-stories-main-container-part1 {
-  width: 66%;
+  width: 100%;
   background-color: rgba(234, 234, 234, 1);
   border-radius: 10px;
   padding: 10px;
@@ -544,9 +544,10 @@
     padding: 0 !important;
   }
   .visual-stories-main-container-main-area .image-box {
-    width: 100% !important;
+    /* width: 100% !important; */
   }
   .visual-stories-main-container-main-area {
+    display: flex !important;
     padding: 10px;
     margin: 0 !important;
   }

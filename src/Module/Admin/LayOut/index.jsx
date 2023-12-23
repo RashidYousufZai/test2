@@ -17,6 +17,7 @@ import Live from "../pages/Live";
 import Poll from "../pages/Poll";
 import { API_URL } from "../../../../API";
 import FlashNews from "../pages/FlashNews";
+import VisualStories from "../pages/VisualStories";
 
 const { Sider, Content } = Layout;
 
@@ -106,6 +107,10 @@ const AdminLayout = () => {
                 );
               case "live":
                 return <Route key={path} path={path} element={<Live />} />;
+              case "stories":
+                return (
+                  <Route key={path} path={path} element={<VisualStories />} />
+                );
               case "ads":
                 return <Route key={path} path={path} element={<Ads />} />;
               case "comment":

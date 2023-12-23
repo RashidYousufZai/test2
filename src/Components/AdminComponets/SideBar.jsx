@@ -109,6 +109,7 @@ const SideBar = () => {
     live: "Live",
     poll: "Poll",
     flashnews: "Flash News",
+    stories: "Visual Stories",
   };
 
   const desiredOrder = [
@@ -124,6 +125,7 @@ const SideBar = () => {
     "comment",
     "live",
     "poll",
+    "stories",
   ];
 
   const sortedAccess = access.filter((route) => desiredOrder.includes(route));

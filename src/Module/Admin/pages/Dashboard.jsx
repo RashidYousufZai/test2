@@ -33,6 +33,7 @@ const Dashboard = () => {
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [isModalReportedOpen, setIsModalReportedOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [status, setStatus] = useState("OFFLINE");
   const { onEdit, setOnEdit, id, setId } = useContext(onEditContext);
   const [visible, setVisible] = useState("");
   const navigation = useNavigate();
@@ -42,6 +43,46 @@ const Dashboard = () => {
       console.log(article);
     });
   }, [axios]);
+
+  // const handleStatusUpdate = (articleId, newStatus) => {
+  //   // Make an API call to update the status
+  //   axios
+  //     .put(`${API_URL}/article/${articleId}`, { status: newStatus })
+  //     .then((response) => {
+  //       // Handle success
+  //       message.success("Article Status Updated Successfully");
+  //       // Refresh the article data
+  //       axios.get(`${API_URL}/article`).then((article) => {
+  //         setArticleData(article.data.reverse());
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       // Handle error
+  //       console.error("Error updating article status", error);
+  //       message.error("Failed to update article status");
+  //     });
+  // };
+
+  const handleToggleStatus = (articleId, currentStatus) => {
+    const newStatus = currentStatus === "online" ? "offline" : "online";
+
+    // Make an API call to update the status
+    axios
+      .put(`${API_URL}/article/${articleId}`, { status: newStatus })
+      .then(() => {
+        // Handle success
+        message.success(`Article Status Changed to ${newStatus.toUpperCase()}`);
+        // Refresh the article data
+        axios.get(`${API_URL}/article`).then((article) => {
+          setArticleData(article.data.reverse());
+        });
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error updating article status", error);
+        message.error("Failed to update article status");
+      });
+  };
   const handleDeleteCancel = () => {
     setIsModalDeleteOpen(false);
     setCurrentUser({});
@@ -162,6 +203,7 @@ const Dashboard = () => {
       title: "News Id",
       dataIndex: "_id",
       key: "_id",
+      render: (text) => text.slice(0, 8), // Display only the first 5 characters
       sorter: (a, b) => a._id.localeCompare(b._id),
     },
     {
@@ -281,15 +323,25 @@ const Dashboard = () => {
       ),
     },
     {
-      title: "Offline/Online",
+      title: "Status",
       key: "status",
-      dataIndex: "offline",
-      render: () => (
+      dataIndex: "status",
+      render: (_, article) => (
         <>
-          <Tag color={"cyan"}>ONLINE</Tag>
+          <Tag color={article.status === "online" ? "cyan" : "red"}>
+            {article.status === "online" ? "ONLINE" : "OFFLINE"}
+          </Tag>
+          <Button
+            type="link"
+            onClick={() => handleToggleStatus(article._id, article.status)}
+            style={{ padding: "auto 0px", margin: "10px 0px" }}
+          >
+            Change Status
+          </Button>
         </>
       ),
     },
+
     {
       title: "Actions",
       key: "action",
