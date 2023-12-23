@@ -19,9 +19,9 @@ export const Login = () => {
       .then((user) => {
         console.log(user.data);
         if (user.data[0].role != "admin") {
-          navigate("/");
+          navigate("/dashboard/dashboard");
         } else {
-          navigate("/");
+          navigate("/dashboard/dashboard");
         }
       });
   }, []);
