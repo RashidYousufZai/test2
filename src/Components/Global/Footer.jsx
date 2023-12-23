@@ -12,29 +12,27 @@ const Footer = () => {
   const { t } = useTranslation();
   const { loading, setLoading, setEffect, effect } = useContext(Loading);
   const [itsItem, setItsItem] = useState([]);
-  const Navigation = useNavigate()
+  const Navigation = useNavigate();
   useEffect(() => {
-    console.log("ll");
     setLoading(true);
     axios
       .get(`${API_URL}/content?type=category`)
       .then((data) => {
         let arr = [];
-        console.log(data.data.length);
+
         for (
           let index = 0;
           index < (data.data.length <= 5 ? Number(data.data.length) : 5);
           index++
         ) {
           const element = data.data[index];
-          console.log(element);
+
           arr.push(element);
         }
         setItsItem(arr);
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
       });
   }, []);
@@ -95,23 +93,25 @@ const Footer = () => {
               let arr = [];
               // let item = [];
               axios
-                .get(
-                  `${API_URL}/subcategory?category=${item.text}`
-                )
+                .get(`${API_URL}/subcategory?category=${item.text}`)
                 .then((data) => {
                   for (let i = 0; i < 5; i++) {
                     const element = data.data[i];
                     arr.push(element);
-                    
                   }
-                  console.log(arr,"lll")
                 });
               return (
-                <div className="footer-item-box">
-                  <div className="footer-heading" style={{cursor:"pointer"}}  onClick={() => {
-                            Navigation(`/itempage?item=${item.text}`);
-                            setEffect(!effect);
-                          }}>{item?.text}</div>
+                <div className="footer-item-box" key={item._id}>
+                  <div
+                    className="footer-heading"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      Navigation(`/itempage?item=${item.text}`);
+                      setEffect(!effect);
+                    }}
+                  >
+                    {item?.text}
+                  </div>
                   <div className="footer-items">
                     <div>{arr[0]?.text}</div>
                     <div>{arr[1]?.text}</div>

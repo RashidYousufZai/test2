@@ -39,13 +39,11 @@ const App = () => {
     axios
       .get(`${API_URL}/user?id=${localStorage.getItem("id")}`)
       .then((user) => {
-        console.log(user.data);
         if (user.data[0].role != "user") {
           setIsAdmin(true);
         }
       });
   }, [location]);
-  console.log(lang);
 
   ReactGa.initialize("G-1CES7BYV2Q");
 

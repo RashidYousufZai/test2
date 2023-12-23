@@ -51,7 +51,7 @@ const VisualStories = () => {
           fontFamily: "Poppins",
         }}
       >
-        Breaking News
+        Visual Stories
       </h1>
       <Row gutter={24}>
         <Col span={24}>

@@ -69,6 +69,26 @@ const CreateUser = () => {
       label: "Poll",
       value: "poll",
     },
+    {
+      label: "Users",
+      value: "users",
+    },
+    {
+      label: "Flash News",
+      value: "flashnews",
+    },
+    {
+      label: "Tags & Category",
+      value: "content",
+    },
+    {
+      label: "Comments",
+      value: "comment",
+    },
+    {
+      label: "Visual Stories",
+      value: "stories",
+    },
   ];
   const onChange = (checkedValues) => {
     // console.log("checked = ", checkedValues);
@@ -185,7 +205,11 @@ const CreateUser = () => {
               </Col>
 
               <Col span={18} style={{ marginTop: "20px" }}>
-                <Checkbox.Group options={options} onChange={onChange} />
+                <Checkbox.Group
+                  style={{ margin: "20px 0px" }}
+                  options={options}
+                  onChange={onChange}
+                />
               </Col>
               <Col span={6}>
                 <Button

@@ -101,7 +101,7 @@ const FlashNews = () => {
           fontFamily: "Poppins",
         }}
       >
-        Advertisement
+        Flash News
       </h1>
       <Card style={{ width: "100%", height: "100%" }}>
         <Row gutter={6}>

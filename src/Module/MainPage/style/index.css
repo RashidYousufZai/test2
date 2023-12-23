@@ -533,7 +533,7 @@
   .flash-news-2-icons {
     display: flex;
     justify-content: space-around;
-    width: 100%;
+    width: auto;
     margin: 10px 0;
   }
   .top-stories-all-cards .stories-card .stories-card-text {

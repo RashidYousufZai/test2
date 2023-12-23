@@ -56,12 +56,11 @@ const MainPage = () => {
       try {
         const response = await axios.get(`${API_URL}/story`);
         setStories(response.data);
-        console.log(response);
       } catch (error) {
         console.error("Error fetching stories:", error);
       }
     };
-    console.log(stories);
+
     fetchStories();
   }, []);
 
@@ -89,7 +88,6 @@ const MainPage = () => {
       });
 
       // Handle the response if needed
-      console.log(response.data);
     } catch (error) {
       // Handle errors if the API call fails
       console.error("Error submitting vote:", error);
@@ -98,11 +96,9 @@ const MainPage = () => {
 
   useEffect(() => {
     axios.get(`${API_URL}/ads?active=true&side=mid`).then((data) => {
-      console.log(data.data, "mid");
       setMidAd(data.data.reverse()[0]);
     });
     axios.get(`${API_URL}/ads?active=true&side=bottom`).then((data) => {
-      console.log(data.data);
       setBottomAd(data.data.reverse()[0]);
     });
   }, []);
@@ -116,7 +112,6 @@ const MainPage = () => {
     axios
       .get(`${API_URL}/article?pagenation=true&limit=6&type=img`)
       .then((data) => {
-        console.log(data.data);
         setArticle(data.data);
       })
       .catch(() => {});
@@ -125,7 +120,6 @@ const MainPage = () => {
     axios
       .get(`${API_URL}/article?pagenation=true&limit=4&type=vid`)
       .then((data) => {
-        console.log(data.data);
         setVideo(data.data);
       })
       .catch(() => {});
@@ -134,7 +128,6 @@ const MainPage = () => {
     axios
       .get(`${API_URL}/article?pagenation=true&limit=6&type=img&page=2`)
       .then((data) => {
-        console.log(data.data);
         setLatestNews(data.data);
       })
       .catch(() => {});
@@ -143,7 +136,6 @@ const MainPage = () => {
     axios
       .get(`${API_URL}/article?id=6524337309c3cf5a3cca172a`)
       .then((data) => {
-        console.log(data.data);
         setArticleTop(data.data[0]);
       })
       .catch(() => {});
@@ -155,17 +147,17 @@ const MainPage = () => {
         setflashnews(users.data);
       })
       .catch((err) => {
-        console.log("err=>>>", err);
+        console.log(err);
       });
 
-    axios
-      .get(`${API_URL}/poll`)
-      .then((users) => {
-        setUserData(users.data.reverse()[0]);
-      })
-      .catch((err) => {
-        console.log("err=>>>", err);
-      });
+    // axios
+    //   .get(`${API_URL}/poll`)
+    //   .then((users) => {
+    //     setUserData(users.data.reverse()[0]);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }, []);
 
   const handlePrevClick = () => {
@@ -179,9 +171,7 @@ const MainPage = () => {
       prevIndex === flashnews.length - 1 ? 0 : prevIndex + 1
     );
   };
-  console.log(Article.length > 0 ? Article[0].image : null);
 
-  console.log(flashnews);
   return (
     <>
       <div className="main-page-conatiner">
@@ -192,7 +182,12 @@ const MainPage = () => {
               <div className="flash-news-slider">
                 <div className="flash-news-2-text">
                   {flashnews.length > 0 && (
-                    <p>{flashnews[currentIndex].slugName}</p>
+                    <a
+                      href={flashnews[currentIndex].link}
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      {flashnews[currentIndex].slugName}
+                    </a>
                   )}
                 </div>
                 <div className="flash-news-2-icons">
@@ -343,10 +338,11 @@ const MainPage = () => {
               <div>{t("ts")}</div>
             </div>
             <div className="top-stories-all-cards">
-              {Article?.map((data) => {
+              {Article?.map((data, index) => {
                 let title = data.title.split(" ").join("-");
                 return (
                   <StoriesCard
+                    key={index}
                     OnPress={() =>
                       navigation(`/details/${title}?id=${data._id}`)
                     }

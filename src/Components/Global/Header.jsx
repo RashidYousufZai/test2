@@ -26,47 +26,40 @@ const Header = () => {
   const [search, setSearch] = useState(false);
   const Navigation = useNavigate();
   useEffect(() => {
-    console.log("ll");
     setLoading(true);
     axios
       .get(`${API_URL}/content?type=category`)
       .then((data) => {
         let arr = [];
-        console.log(data.data.length);
+
         for (
           let index = 0;
           index < (data.data.length <= 10 ? Number(data.data.length) : 10);
           index++
         ) {
           const element = data.data[index];
-          console.log(element);
+
           arr.push(element);
         }
         setItsItem(arr);
 
         let arr2 = [];
-        console.log(data.data.length, "l");
+
         for (let index = 0; index < data.data.length; index++) {
           const element = data.data[index];
-          console.log({ value: element.text }, "gg");
+
           arr2.push({ value: element.text });
         }
         setItsItem2(arr2);
-        console.log(arr2, "arrt");
+
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
       });
-    axios
-      .get(
-        `${API_URL}/ads?active=true&side=top`
-      )
-      .then((data) => {
-        console.log(data.data);
-        setTopAd(data.data.reverse()[0]);
-      });
+    axios.get(`${API_URL}/ads?active=true&side=top`).then((data) => {
+      setTopAd(data.data.reverse()[0]);
+    });
   }, []);
   return (
     <>
@@ -98,7 +91,11 @@ const Header = () => {
             </select>
           </div>
           <div className="header-contianer">
-            <div onClick={() => Navigation("/")} style={{cursor:"pointer"}} className="header-logo-box">
+            <div
+              onClick={() => Navigation("/")}
+              style={{ cursor: "pointer" }}
+              className="header-logo-box"
+            >
               <img src={logo} alt="" />
             </div>
             <div className="header-row-box">
@@ -108,9 +105,7 @@ const Header = () => {
                     let arr = [];
                     // let item = [];
                     axios
-                      .get(
-                        `${API_URL}/subcategory?category=${data.text}`
-                      )
+                      .get(`${API_URL}/subcategory?category=${data.text}`)
                       .then((data) => {
                         for (let i = 0; i < data.data.length; i++) {
                           const element = data.data[i];
@@ -134,6 +129,7 @@ const Header = () => {
                       });
                     return (
                       <Dropdown
+                        key={data._id}
                         menu={{
                           items: arr,
                         }}
@@ -141,7 +137,6 @@ const Header = () => {
                         arrow
                       >
                         <li
-                          key={data._id}
                           onClick={() => {
                             Navigation(`/itempage?item=${data.text}`);
                             setEffect(!effect);
@@ -190,7 +185,6 @@ const Header = () => {
                   <BiSolidSearch
                     onClick={() => {
                       setSearch(true);
-                      console.log("ll");
                     }}
                     size={30}
                     color="white"
@@ -283,7 +277,6 @@ const Header = () => {
         <div
           onClick={() => {
             // setSearch(false);
-            console.log("lskdls");
           }}
           style={{
             width: "100%",
@@ -298,7 +291,11 @@ const Header = () => {
         >
           <div style={{ width: "100%", height: "100%" }}>
             <div>
-            <IoIosCloseCircle onClick={()=>setSearch(false)} size={40} style={{marginLeft:10,marginTop:10,cursor:"pointer"}} />
+              <IoIosCloseCircle
+                onClick={() => setSearch(false)}
+                size={40}
+                style={{ marginLeft: 10, marginTop: 10, cursor: "pointer" }}
+              />
             </div>
             <AutoComplete
               style={{
@@ -315,7 +312,7 @@ const Header = () => {
               }
             >
               <Input.Search
-              autoFocus
+                autoFocus
                 size="large"
                 placeholder="Search"
                 enterButton
