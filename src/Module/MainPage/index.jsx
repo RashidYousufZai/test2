@@ -368,18 +368,25 @@ const MainPage = () => {
               {console.log(topStories)}
               {Article?.map((data, index) => {
                 let title = data.title?.split(" ").join("-");
-                console.log(data);
-                return (
-                  <StoriesCard
-                    data={data}
-                    key={index}
-                    OnPress={() =>
-                      navigation(`/details/${title}?id=${data._id}`)
-                    }
-                    image={data.image}
-                    text={data.title}
-                  />
-                );
+
+                // Check if title is defined before rendering the StoriesCard
+                if (title) {
+                  return (
+                    <StoriesCard
+                      data={data}
+                      key={index}
+                      OnPress={() =>
+                        navigation(`/details/${title}?id=${data._id}`)
+                      }
+                      image={data.image}
+                      text={data.title}
+                    />
+                  );
+                } else {
+                  // Handle the case where title is undefined or null
+                  console.error("Title is undefined or null for data:", data);
+                  return null; // or handle it in a way that makes sense for your application
+                }
               })}
             </div>
           </div>
@@ -390,16 +397,24 @@ const MainPage = () => {
             <div className="news-cards-area container3">
               {latestNews.map((data) => {
                 let title = data?.title?.split(" ").join("-");
-                return (
-                  <div className="news-card-items-area" key={data?._id}>
-                    <NewsCard
-                      data={data}
-                      onPress={() =>
-                        navigation(`/details/${title}?id=${data._id}`)
-                      }
-                    />
-                  </div>
-                );
+
+                // Check if title is defined before rendering the NewsCard
+                if (title) {
+                  return (
+                    <div className="news-card-items-area" key={data?._id}>
+                      <NewsCard
+                        data={data}
+                        onPress={() =>
+                          navigation(`/details/${title}?id=${data._id}`)
+                        }
+                      />
+                    </div>
+                  );
+                } else {
+                  // Handle the case where title is undefined or null
+                  console.error("Title is undefined or null for data:", data);
+                  return null; // or handle it in a way that makes sense for your application
+                }
               })}
 
               {/* <div className="news-card-items-area">
