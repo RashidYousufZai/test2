@@ -471,6 +471,33 @@ const Upload = () => {
                     />
                   </Col>
                   <Col span={12}>
+                    <Select
+                      // onChange={(e) => setValue(e)}
+                      placeholder="Select Language"
+                      onChange={(e) => setLanguage(e)}
+                      value={Language}
+                      style={{
+                        width: "100%",
+                        // height: 50,
+                        marginBottom: "20px",
+                      }}
+                      options={[
+                        {
+                          value: "English",
+                          label: "English",
+                        },
+                        {
+                          value: "Urdu",
+                          label: "Urdu",
+                        },
+                        {
+                          value: "Hindi",
+                          label: "Hindi",
+                        },
+                      ]}
+                    />
+                  </Col>
+                  <Col span={24}>
                     <Input
                       placeholder="Headline"
                       value={title}
@@ -490,6 +517,19 @@ const Upload = () => {
                         role === "admin" ? categoryData : userCategoryOptions
                       }
                     />
+                  </Col>
+                  <Col span={12}>
+                    <Select
+                      placeholder="Sub Category"
+                      value={subCategory ? subCategory : null}
+                      onChange={(e) => setSubCategory(e)}
+                      style={{
+                        width: "100%",
+                      }}
+                      // dropdownRender={}
+                      options={subCategoryData}
+                    />
+                    <div style={{ marginBottom: "20px" }}></div>
                   </Col>
                 </Row>
               </Col>
@@ -586,6 +626,7 @@ const Upload = () => {
                     />
                     <div style={{ marginBottom: "20px" }}></div>
                   </Col>
+
                   {/* <Col span={12}>
                     <Select
                       value={Topic ? Topic : null}
@@ -651,7 +692,7 @@ const Upload = () => {
                 />
                 <div style={{ marginBottom: "20px" }}></div>
               </Col>
-              <Col span={6}>
+              {/* <Col span={6}>
                 <Select
                   placeholder="Sub Category"
                   value={subCategory ? subCategory : null}
@@ -663,7 +704,7 @@ const Upload = () => {
                   options={subCategoryData}
                 />
                 <div style={{ marginBottom: "20px" }}></div>
-              </Col>
+              </Col> */}
               <Col span={6}>
                 <Select
                   placeholder="Reported By"

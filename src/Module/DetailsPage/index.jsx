@@ -29,7 +29,7 @@ import { useContext } from "react";
 import { API_URL } from "../../../API";
 const { TextArea } = Input;
 const DetailsPage = () => {
-  const { pathname,search } = useLocation();
+  const { pathname, search } = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [loading2, setLoading2] = useState(false);
@@ -41,36 +41,33 @@ const DetailsPage = () => {
   const [userData, setUserData] = useState([]);
   const { t } = useTranslation();
   const navigation = useNavigate();
-  const { loading, setLoading,effect } = useContext(Loading);
+  const { loading, setLoading, effect } = useContext(Loading);
   const query = new URLSearchParams(search);
   console.log();
   useEffect(() => {
-    console.log("heee")
+    console.log("heee");
     axios
-      .get(
-        `${API_URL}/article?id=${query.get("id")}`
-      )
+      .get(`${API_URL}/article?id=${query.get("id")}`)
       .then(async (article) => {
         // let title = article.data[0].title.split(" ").join("-");
-        console.log(article.data[0],"art");
-        setLoading(false)
+        console.log(article.data[0], "art");
+        setLoading(false);
         setData(article.data[0]);
         // navigation(`/details/${title}`);
-        document.getElementById("parar").innerHTML = article?.data[0].discription
+        document.getElementById("parar").innerHTML =
+          article?.data[0].discription;
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false)
+        setLoading(false);
       });
   }, []);
   const [data2, setData2] = useState([]);
   useEffect(() => {
-    axios
-      .get(`${API_URL}/comment?id=${query.get("id")}`)
-      .then((res) => {
-        console.log(res.data);
-        setData2(res.data);
-      });
+    axios.get(`${API_URL}/comment?id=${query.get("id")}`).then((res) => {
+      console.log(res.data);
+      setData2(res.data);
+    });
   }, []);
   const showModal = () => {
     setIsModalOpen(true);
@@ -115,7 +112,8 @@ const DetailsPage = () => {
           <div className="details-page-top-items">
             <div className="details-page-top-item1">
               <FaUser style={{ marginRight: "10px" }} />
-              India
+              {data?.publishBy}
+              {console.log(data?.publishBy)}
             </div>
             <div className="details-page-top-item2">
               <AiOutlineCalendar size={22} style={{ marginRight: "10px" }} />
@@ -176,11 +174,8 @@ const DetailsPage = () => {
             className="details-page-main-img"
           />
           <div className="details-main-text-area">
-            <div className="details-main-text-area-heading">
-              {data?.title}
-            </div>
-            <div className="deatils-main-para-area" id="parar">
-            </div>
+            <div className="details-main-text-area-heading">{data?.title}</div>
+            <div className="deatils-main-para-area" id="parar"></div>
           </div>
           <div className="details-main-related-new-area">
             <div className="details-main-related-new-area-heading">
@@ -196,67 +191,69 @@ const DetailsPage = () => {
             <div className="details-main-related-new-area-heading">
               <span>{t("to")} :</span> {data?.topic}
             </div>
-            {
-            data?.comment?<div className="details-comment-area">
-            <div
-              className="comment-button"
-              style={{ cursor: "pointer" }}
-              onClick={showModal}
-            >
-              <FaRegComment style={{ marginRight: "10px" }} /> Comment
-            </div>
-          </div>:<></>
-          }
-            {data2.map(({name,message})=>{
-              return(
-                <div style={{ display: "flex",marginTop:"10px" }}>
-              <div>
+            {data?.comment ? (
+              <div className="details-comment-area">
                 <div
-                  style={{
-                    fontSize: "25px",
-                    fontFamily: "Poppins",
-                    backgroundColor: "rgba(0,0,0,0.1)",
-                    padding: "10px 20px",
-                    display: "flex",
-                    height: 30,
-                  }}
+                  className="comment-button"
+                  style={{ cursor: "pointer" }}
+                  onClick={showModal}
                 >
-                  {data2 && name[0].toUpperCase()}
+                  <FaRegComment style={{ marginRight: "10px" }} /> Comment
                 </div>
               </div>
-              <div
-                style={{
-                  fontSize: "16px",
-                  fontFamily: "Poppins",
-                  backgroundColor: "rgba(0,0,0,0.1)",
-                  padding: "5px 10px",
-                  width: "200px",
-                  display: "flex",
-                  marginLeft: 10,
-                }}
-              >
-               <div>
-               <div
-                  style={{
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    fontWeight: "600",
-                  }}
-                >
-                  {data2 && name.toUpperCase()}
+            ) : (
+              <></>
+            )}
+            {data2.map(({ name, message }) => {
+              return (
+                <div style={{ display: "flex", marginTop: "10px" }}>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: "25px",
+                        fontFamily: "Poppins",
+                        backgroundColor: "rgba(0,0,0,0.1)",
+                        padding: "10px 20px",
+                        display: "flex",
+                        height: 30,
+                      }}
+                    >
+                      {data2 && name[0].toUpperCase()}
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "16px",
+                      fontFamily: "Poppins",
+                      backgroundColor: "rgba(0,0,0,0.1)",
+                      padding: "5px 10px",
+                      width: "200px",
+                      display: "flex",
+                      marginLeft: 10,
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "16px",
+                          fontFamily: "Poppins",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {data2 && name.toUpperCase()}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "16px",
+                          fontFamily: "Poppins",
+                        }}
+                      >
+                        {data2 && message}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div
-                  style={{
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  {data2 && message}
-                </div>
-               </div>
-              </div>
-            </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -290,17 +287,19 @@ const DetailsPage = () => {
           <div className="details-main-related-new-area-heading">
             <span>{t("to")} :</span> Terror Attack
           </div>
-          {
-            data?.comment?<div className="details-comment-area">
-            <div
-              className="comment-button"
-              style={{ cursor: "pointer" }}
-              onClick={showModal}
-            >
-              <FaRegComment style={{ marginRight: "10px" }} /> Comment
+          {data?.comment ? (
+            <div className="details-comment-area">
+              <div
+                className="comment-button"
+                style={{ cursor: "pointer" }}
+                onClick={showModal}
+              >
+                <FaRegComment style={{ marginRight: "10px" }} /> Comment
+              </div>
             </div>
-          </div>:<></>
-          }
+          ) : (
+            <></>
+          )}
           <div>
             <div>{data2 && data2[0]?.name}</div>
           </div>

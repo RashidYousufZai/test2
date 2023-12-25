@@ -44,6 +44,11 @@ const Dashboard = () => {
     });
   }, [axios]);
 
+  const stripHtmlTags = (html) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
+
   // const handleStatusUpdate = (articleId, newStatus) => {
   //   // Make an API call to update the status
   //   axios
@@ -203,7 +208,7 @@ const Dashboard = () => {
       title: "News Id",
       dataIndex: "_id",
       key: "_id",
-      render: (text) => text.slice(0, 8), // Display only the first 5 characters
+      // render: (text) => text.slice(0, 12),
       sorter: (a, b) => a._id.localeCompare(b._id),
     },
     {
@@ -269,7 +274,7 @@ const Dashboard = () => {
       render: (text) => {
         let tt = "";
         if (tt.length < 15) {
-          for (let icon = 0; icon < text.length; icon++) {
+          for (let icon = 0; icon < text?.length; icon++) {
             const element = text[icon];
             tt += element;
           }
@@ -296,7 +301,11 @@ const Dashboard = () => {
         for (let icon = 0; icon < times; icon++) {
           tt += text[icon];
         }
-        return <a>{tt + "..."}</a>;
+
+        // Strip HTML tags from the content
+        const strippedText = stripHtmlTags(tt);
+
+        return <a>{strippedText + "..."}</a>;
       },
     },
 
@@ -323,7 +332,7 @@ const Dashboard = () => {
       ),
     },
     {
-      title: "Status",
+      title: "Online / Offline",
       key: "status",
       dataIndex: "status",
       render: (_, article) => (
@@ -524,7 +533,7 @@ const Dashboard = () => {
               options={[
                 {
                   value: "img",
-                  label: "Images",
+                  label: "Images / Text",
                 },
                 {
                   value: "vid",

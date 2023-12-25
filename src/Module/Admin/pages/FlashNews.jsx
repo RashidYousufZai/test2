@@ -1,79 +1,64 @@
-import {
-  Button,
-  Card,
-  Col,
-  DatePicker,
-  Image,
-  Input,
-  Layout,
-  Row,
-  Select,
-  Table,
-  message,
-} from "antd";
-import Upload from "antd/es/upload/Upload";
+import { Button, Card, Col, Input, Row, Table, message } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { json } from "react-router-dom";
 import { API_URL } from "../../../../API";
+import { Tag } from "antd";
 
-const { Header, Footer, Sider, Content } = Layout;
-const headerStyle = {
-  textAlign: "center",
-  color: "#fff",
-  height: 100,
-  lineHeight: "64px",
-  backgroundColor: "#7dbcea",
-  width: "100%",
-};
-const { RangePicker } = DatePicker;
 const FlashNews = () => {
-  const [img, setImg] = useState(null);
   const [link, setLink] = useState("");
   const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [Update, setUpdate] = useState(false);
   const [userData, setUserData] = useState([]);
-  const [visible, setVisible] = useState("");
-  const [date, setDate] = useState("");
-  const [side, setSide] = useState("");
-  const [noOfImpression, setNoOfImpression] = useState("");
-  const [Impression, setImpression] = useState(0);
-
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    setImpression((prevImpression) => prevImpression + 1);
-  }, []);
-  useEffect(() => {
-    console.log("h");
     axios
       .get(`${API_URL}/flashnews`)
       .then((users) => {
         setUserData(users.data.reverse());
-        console.log(users);
       })
       .catch((err) => {
         console.log("err=>>>", err);
       });
   }, []);
+
   const onUpload = () => {
     setLoading(true);
     axios
       .post(`${API_URL}/flashnews?id=${localStorage.getItem("id")}`, {
         link: link,
         slugName: title,
+        status: "active", // Set the default status to "active" when uploading
       })
       .then((data) => {
-        message.success("Your Ad was successfully Uploaded");
+        message.success("Your Flash News was successfully Uploaded");
         setLink("");
         setLoading(false);
         setTitle("");
       })
       .catch(() => {
-        message.error("Your Ad was not successfully Uploaded");
+        message.error("Your Flash News was not successfully Uploaded");
         setLoading(false);
       });
   };
+
+  const handleToggleStatus = (newsId, currentStatus) => {
+    const newStatus = currentStatus === "active" ? "inactive" : "active";
+
+    axios
+      .put(`${API_URL}/flashnews/${newsId}/status`, { status: newStatus })
+      .then(() => {
+        message.success(`Flash News Status Changed to ${newStatus}`);
+        // Refresh the flash news data
+        axios.get(`${API_URL}/flashnews`).then((users) => {
+          setUserData(users.data.reverse());
+        });
+      })
+      .catch((error) => {
+        console.error("Error updating flash news status", error);
+        message.error("Failed to update flash news status");
+      });
+  };
+
   const columns = [
     {
       title: "Title",
@@ -90,7 +75,27 @@ const FlashNews = () => {
         </a>
       ),
     },
+    {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+      render: (_, article) => (
+        <>
+          <Tag color={article.status === "active" ? "cyan" : "red"}>
+            {article.status === "active" ? "Active" : "Inactive"}
+          </Tag>
+          <Button
+            type="link"
+            onClick={() => handleToggleStatus(article._id, article.status)}
+            style={{ padding: "auto 0px", margin: "10px 0px" }}
+          >
+            Change Status
+          </Button>
+        </>
+      ),
+    },
   ];
+
   return (
     <>
       <h1
@@ -119,8 +124,7 @@ const FlashNews = () => {
               onChange={(e) => setLink(e.target.value)}
             />
           </Col>
-
-          <Col style={{ marginTop: 0 }} span={6}>
+          <Col span={6}>
             <Button
               style={{ width: "100%" }}
               loading={loading}
@@ -131,7 +135,6 @@ const FlashNews = () => {
             </Button>
           </Col>
         </Row>
-
         <Row>
           <Col span={24} style={{ marginTop: 20 }}>
             <Table columns={columns} dataSource={userData} />

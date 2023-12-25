@@ -301,7 +301,7 @@ const BreakingNews = () => {
             </Row>
 
             <Row gutter={20}>
-              {/* <Col span={12}>
+              <Col span={12}>
                 <Select
                   // onChange={(e) => setValue(e)}
                   placeholder="Select Language"
@@ -327,7 +327,7 @@ const BreakingNews = () => {
                     },
                   ]}
                 />
-              </Col> */}
+              </Col>
 
               <Col span={24} style={{ marginTop: "20px" }}>
                 <JoditEditor

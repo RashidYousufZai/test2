@@ -38,11 +38,13 @@ const MainPage = () => {
   const [latestNews, setLatestNews] = useState([]);
   const [ArticleTop, setArticleTop] = useState(null);
   const [isModal2Open, setIsModal2Open] = useState(true);
+  const [breakingNews, setbreakingNews] = useState([]);
   const [val, setVal] = useState("");
   const sliderItems = [slider, img1, img2, img4];
   const { t } = useTranslation();
   const [midAd, setMidAd] = useState({});
   const [bottomAd, setBottomAd] = useState({});
+  const [topStories, settopStories] = useState([]);
   const navigation = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPoll, setCurrentPoll] = useState(null);
@@ -64,6 +66,26 @@ const MainPage = () => {
     fetchStories();
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(
+        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=topStories`
+      )
+      .then((data) => {
+        settopStories(data.data);
+      })
+      .catch(() => {});
+    axios
+      .get(
+        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=breakingNews`
+      )
+      .then((data) => {
+        setbreakingNews(data);
+        console.log(data);
+      })
+      .catch(() => {});
+  }, []);
+  console.log(topStories);
   useEffect(() => {
     axios
       .get(`${API_URL}/polls`)
@@ -137,6 +159,7 @@ const MainPage = () => {
       .get(`${API_URL}/article?id=6524337309c3cf5a3cca172a`)
       .then((data) => {
         setArticleTop(data.data[0]);
+        console.log(Article);
       })
       .catch(() => {});
   }, []);
@@ -144,7 +167,10 @@ const MainPage = () => {
     axios
       .get(`${API_URL}/flashnews`)
       .then((users) => {
-        setflashnews(users.data);
+        const activeFlashNews = users.data.filter(
+          (item) => item.status === "active"
+        );
+        setflashnews(activeFlashNews);
       })
       .catch((err) => {
         console.log(err);
@@ -205,9 +231,9 @@ const MainPage = () => {
                 <ImageCard
                   height="100%"
                   width="100%"
-                  img={ArticleTop?.image}
-                  text={ArticleTop?.title}
-                  id={ArticleTop?._id}
+                  img={breakingNews?.data?.[0]?.image}
+                  text={breakingNews?.data?.[0]?.title}
+                  id={breakingNews?.data?.[0]?.UserID}
                 />
               </div>
               <div
@@ -217,10 +243,11 @@ const MainPage = () => {
                 }}
               >
                 <ImageCard
+                  img={breakingNews.data?.[1].image}
+                  text={breakingNews.data?.[1].title}
+                  id={breakingNews.data?.[1].UserID}
                   height="100%"
                   width="100%"
-                  img={img2}
-                  text="Maharashtra Forest Staff Killed By Wil..."
                 />
               </div>
             </div>
@@ -338,16 +365,19 @@ const MainPage = () => {
               <div>{t("ts")}</div>
             </div>
             <div className="top-stories-all-cards">
+              {console.log(topStories)}
               {Article?.map((data, index) => {
-                let title = data.title.split(" ").join("-");
+                let title = data.title?.split(" ").join("-");
+                console.log(data);
                 return (
                   <StoriesCard
+                    data={data}
                     key={index}
                     OnPress={() =>
                       navigation(`/details/${title}?id=${data._id}`)
                     }
-                    image={data?.image}
-                    text={data?.title}
+                    image={data.image}
+                    text={data.title}
                   />
                 );
               })}
@@ -359,7 +389,7 @@ const MainPage = () => {
             <div className="main-news-heading">{t("ln")}</div>
             <div className="news-cards-area container3">
               {latestNews.map((data) => {
-                let title = data.title.split(" ").join("-");
+                let title = data?.title?.split(" ").join("-");
                 return (
                   <div className="news-card-items-area" key={data?._id}>
                     <NewsCard
