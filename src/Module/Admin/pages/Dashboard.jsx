@@ -36,6 +36,7 @@ const Dashboard = () => {
   const [status, setStatus] = useState("OFFLINE");
   const { onEdit, setOnEdit, id, setId } = useContext(onEditContext);
   const [visible, setVisible] = useState("");
+  const [sortedArticleData, setSortedArticleData] = useState([]);
   const navigation = useNavigate();
   useEffect(() => {
     axios.get(`${API_URL}/article`).then((article) => {
@@ -195,14 +196,46 @@ const Dashboard = () => {
       });
   };
 
+  useEffect(() => {
+    // Initialize serial numbers when the component mounts or when the data changes
+    const initialSerialNumbers = articleData.map((_, index) => index + 1);
+    setSortedArticleData(initialSerialNumbers);
+  }, [articleData]);
+
+  const handleSort = (column) => {
+    const { dataIndex, sortOrder } = column;
+
+    // Create a copy of the current serial numbers
+    const newSerialNumbers = [...sortedArticleData];
+
+    // Sort the serial numbers based on the selected column
+    newSerialNumbers.sort((a, b) => {
+      const valueA = articleData[a - 1][dataIndex];
+      const valueB = articleData[b - 1][dataIndex];
+
+      if (sortOrder === "ascend") {
+        return valueA - valueB;
+      } else if (sortOrder === "descend") {
+        return valueB - valueA;
+      }
+
+      return 0;
+    });
+
+    // Update the state with the new serial numbers
+    setSortedArticleData(newSerialNumbers);
+  };
+
   const columns = [
     {
       title: "Serial No.",
       dataIndex: "serialNumber",
       key: "serialNumber",
-      render: (_, record, index) => (
-        <div style={{ width: "70px" }}>{index + 1}</div>
+      render: (_, record) => (
+        <div style={{ width: "70px" }}>{record.serialNumber}</div>
       ),
+      sorter: (a, b) => a.serialNumber - b.serialNumber,
+      sortDirections: ["ascend", "descend"],
     },
     {
       title: "News Id",
@@ -217,7 +250,7 @@ const Dashboard = () => {
       dataIndex: "createdAt",
       render: (date) => (
         <div style={{ width: "100px" }}>
-          {moment(date).format("YYYY-MM-DD")}
+          {moment(date).format("DD-YYYY-MM")}
         </div>
       ),
       sorter: (a, b) => moment(a.createdAt) - moment(b.createdAt),
@@ -430,6 +463,11 @@ const Dashboard = () => {
       ),
     },
   ];
+
+  const dataWithSerialNumbers = sortedArticleData.map((serialNumber) => ({
+    ...articleData[serialNumber - 1],
+    serialNumber,
+  }));
   return (
     <>
       <h1
@@ -604,11 +642,10 @@ const Dashboard = () => {
           </Col>
           <Col span={24}>
             <Table
-              scroll={{
-                x: 1300,
-              }}
+              scroll={{ x: 1300 }}
               columns={columns}
-              dataSource={articleData}
+              dataSource={dataWithSerialNumbers}
+              onChange={handleSort}
             />
           </Col>
         </Row>
