@@ -84,6 +84,7 @@ export const Login = () => {
             )}
           </div>
         </div>
+        {console.log("test")}
         <div
           style={{
             color: "blue",
