@@ -35,6 +35,8 @@ const DetailsPage = () => {
   const [loading2, setLoading2] = useState(false);
   const [isFav, setIsFav] = useState(false);
   const [data, setData] = useState(null);
+  const [article, setArticle] = useState(null);
+
   const [name, setName] = useState("");
   const [Email, setEmail] = useState("");
   const [comment, setComment] = useState("");
@@ -43,12 +45,13 @@ const DetailsPage = () => {
   const navigation = useNavigate();
   const { loading, setLoading, effect } = useContext(Loading);
   const query = new URLSearchParams(search);
-  console.log();
+  console.log(query.get("id"));
   useEffect(() => {
     console.log("heee");
     axios
       .get(`${API_URL}/article?id=${query.get("id")}`)
       .then(async (article) => {
+        setArticle(article);
         // let title = article.data[0].title.split(" ").join("-");
         console.log(article.data[0], "art");
         setLoading(false);
@@ -62,6 +65,7 @@ const DetailsPage = () => {
         setLoading(false);
       });
   }, []);
+  console.log(article);
   const [data2, setData2] = useState([]);
   useEffect(() => {
     axios.get(`${API_URL}/comment?id=${query.get("id")}`).then((res) => {
@@ -104,6 +108,7 @@ const DetailsPage = () => {
         message.success("Successfully Added");
       });
   };
+  console.log(data?.publishBy);
   return (
     <>
       <div className="detail-page-top-container container2 container3">

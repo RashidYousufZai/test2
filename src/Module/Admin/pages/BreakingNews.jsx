@@ -1,21 +1,10 @@
-import {
-  Button,
-  Card,
-  Col,
-  Input,
-  Modal,
-  Row,
-  Select,
-  Space,
-  message,
-} from "antd";
+import { Button, Card, Col, Input, Modal, Row, Select, message } from "antd";
 import axios from "axios";
-import React, { useState, useRef, useMemo, useContext, useEffect } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
 import { OnEdit as onEditContext } from "../../../Context";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../../API";
-const { TextArea } = Input;
 const BreakingNews = () => {
   const [title, setTitle] = useState("");
   const [Topic, setTopic] = useState("");
@@ -227,7 +216,7 @@ const BreakingNews = () => {
                     setUpdate(true);
                   }}
                   style={{
-                    width: "300px",
+                    width: "auto",
                     height: "200px",
                     backgroundColor: "rgba(0,0,0,0.1)",
                     borderRadius: "10px",
@@ -251,7 +240,7 @@ const BreakingNews = () => {
                   ) : (
                     <img
                       style={{
-                        width: "300px",
+                        width: "auto",
                         height: "200px",
                         borderRadius: "10px",
                       }}
@@ -265,7 +254,7 @@ const BreakingNews = () => {
                 <Col span={6}>
                   <img
                     style={{
-                      width: "300px",
+                      width: "auto",
                       height: "200px",
                       borderRadius: "10px",
                     }}
@@ -296,39 +285,38 @@ const BreakingNews = () => {
                       onChange={(e) => setTopic(e.target.value)}
                     />
                   </Col>
+                  <Col span={12}>
+                    <Select
+                      // onChange={(e) => setValue(e)}
+                      placeholder="Select Language"
+                      onChange={(e) => setLanguage(e)}
+                      value={Language}
+                      style={{
+                        width: "100%",
+                        // height: 50,
+                        marginBottom: "20px",
+                      }}
+                      options={[
+                        {
+                          value: "English",
+                          label: "English",
+                        },
+                        {
+                          value: "Urdu",
+                          label: "Urdu",
+                        },
+                        {
+                          value: "Hindi",
+                          label: "Hindi",
+                        },
+                      ]}
+                    />
+                  </Col>
                 </Row>
               </Col>
             </Row>
 
             <Row gutter={20}>
-              <Col span={12}>
-                <Select
-                  // onChange={(e) => setValue(e)}
-                  placeholder="Select Language"
-                  onChange={(e) => setLanguage(e)}
-                  value={Language}
-                  style={{
-                    width: "100%",
-                    // height: 50,
-                    marginBottom: "20px",
-                  }}
-                  options={[
-                    {
-                      value: "English",
-                      label: "English",
-                    },
-                    {
-                      value: "Urdu",
-                      label: "Urdu",
-                    },
-                    {
-                      value: "Hindi",
-                      label: "Hindi",
-                    },
-                  ]}
-                />
-              </Col>
-
               <Col span={24} style={{ marginTop: "20px" }}>
                 <JoditEditor
                   ref={editor}
@@ -425,8 +413,8 @@ const BreakingNews = () => {
             flexDirection: "row",
           }}
         >
-          {keyword.map((e) => {
-            return <div>{e},</div>;
+          {keyword.map((e, index) => {
+            return <div key={index}>{e},</div>;
           })}
         </div>
       </Modal>

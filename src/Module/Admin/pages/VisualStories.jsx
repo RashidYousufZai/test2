@@ -73,7 +73,7 @@ const VisualStories = () => {
                     document.getElementById("file-name").click();
                   }}
                   style={{
-                    width: "300px",
+                    width: "auto",
                     height: "200px",
                     backgroundColor: "rgba(0,0,0,0.1)",
                     borderRadius: "10px",
@@ -97,7 +97,7 @@ const VisualStories = () => {
                   ) : (
                     <img
                       style={{
-                        width: "300px",
+                        width: "auto",
                         height: "200px",
                         borderRadius: "10px",
                       }}

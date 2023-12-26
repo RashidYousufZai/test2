@@ -339,7 +339,7 @@ const Upload = () => {
                     setUpdate(true);
                   }}
                   style={{
-                    width: "300px",
+                    width: "auto",
                     height: "200px",
                     backgroundColor: "rgba(0,0,0,0.1",
                     borderRadius: "10px",
@@ -363,7 +363,7 @@ const Upload = () => {
                   ) : (
                     <img
                       style={{
-                        width: "300px",
+                        width: "auto",
                         height: "200px",
                         borderRadius: "10px",
                       }}
@@ -379,7 +379,7 @@ const Upload = () => {
                 <Col span={8}>
                   <img
                     style={{
-                      width: "300px",
+                      width: "auto",
                       height: "200px",
                       borderRadius: "10px",
                     }}
@@ -410,7 +410,7 @@ const Upload = () => {
                       setUpdate(true);
                     }}
                     style={{
-                      width: "300px",
+                      width: "auto",
                       height: "200px",
                       backgroundColor: "rgba(0,0,0,0.1",
                       borderRadius: "10px",
@@ -434,7 +434,7 @@ const Upload = () => {
                     ) : (
                       <img
                         style={{
-                          width: "300px",
+                          width: "auto",
                           height: "200px",
                           borderRadius: "10px",
                         }}

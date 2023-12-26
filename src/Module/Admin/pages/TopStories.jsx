@@ -1,21 +1,10 @@
-import {
-  Button,
-  Card,
-  Col,
-  Input,
-  Modal,
-  Row,
-  Select,
-  Space,
-  message,
-} from "antd";
+import { Button, Card, Col, Input, Modal, Row, Select, message } from "antd";
 import axios from "axios";
-import React, { useState, useRef, useMemo, useContext, useEffect } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
 import { OnEdit as onEditContext } from "../../../Context";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../../API";
-const { TextArea } = Input;
 const TopStories = () => {
   const [title, setTitle] = useState("");
   const [Topic, setTopic] = useState("");
@@ -207,7 +196,7 @@ const TopStories = () => {
       <Row gutter={24}>
         <Col span={24}>
           <Card style={{ minHeight: "80vh", height: "100%" }}>
-            <Row gutter={24}>
+            <Row gutter={20}>
               {/* First column - 25% width */}
               <Col span={6}>
                 <Input
@@ -227,7 +216,7 @@ const TopStories = () => {
                     setUpdate(true);
                   }}
                   style={{
-                    width: "300px",
+                    width: "auto",
                     height: "200px",
                     backgroundColor: "rgba(0,0,0,0.1)",
                     borderRadius: "10px",
@@ -251,7 +240,7 @@ const TopStories = () => {
                   ) : (
                     <img
                       style={{
-                        width: "300px",
+                        width: "auto",
                         height: "200px",
                         borderRadius: "10px",
                       }}
@@ -265,7 +254,7 @@ const TopStories = () => {
                 <Col span={6}>
                   <img
                     style={{
-                      width: "300px",
+                      width: "auto",
                       height: "200px",
                       borderRadius: "10px",
                     }}
@@ -279,6 +268,23 @@ const TopStories = () => {
               {/* Third and Fourth columns - 75% width */}
               <Col span={18}>
                 <Row gutter={20}>
+                  <Col span={12}>
+                    <Input
+                      placeholder="Topic"
+                      value={Topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                    />
+                  </Col>
+                  {/* Fourth column - 50% width */}
+                  <Col span={12}>
+                    <Input
+                      placeholder="Headline"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <div style={{ marginBottom: "20px" }}></div>
+                  </Col>
+
                   {/* Third column - 50% width */}
                   <Col span={12}>
                     <Select
@@ -305,26 +311,17 @@ const TopStories = () => {
                       ]}
                     />
                   </Col>
-                  {/* Fourth column - 50% width */}
-                  <Col span={12}>
-                    <Input
-                      placeholder="Headline"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <div style={{ marginBottom: "20px" }}></div>
-                  </Col>
                 </Row>
 
                 {/* Fifth column - 75% width, in the same line */}
                 <Row gutter={20}>
-                  <Col span={12}>
+                  {/* <Col span={12}>
                     <Input
                       placeholder="Topic"
                       value={Topic}
                       onChange={(e) => setTopic(e.target.value)}
                     />
-                  </Col>
+                  </Col> */}
                 </Row>
               </Col>
             </Row>
@@ -426,8 +423,8 @@ const TopStories = () => {
             flexDirection: "row",
           }}
         >
-          {keyword.map((e) => {
-            return <div>{e},</div>;
+          {keyword.map((e, index) => {
+            return <div key={index}>{e},</div>;
           })}
         </div>
       </Modal>

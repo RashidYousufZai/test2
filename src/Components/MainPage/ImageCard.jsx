@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const ImageCard = ({ width, height, img, text, style, border,id }) => {
+const ImageCard = ({ width, height, img, text, style, border, id }) => {
   const navigate = useNavigate();
   let title = text?.split(" ").join("-");
+  console.log(title, id);
   return (
     <div
       className="image-box"

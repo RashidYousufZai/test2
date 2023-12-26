@@ -69,7 +69,7 @@ const MainPage = () => {
   useEffect(() => {
     axios
       .get(
-        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=topStories`
+        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=topStories&status=online`
       )
       .then((data) => {
         settopStories(data.data);
@@ -77,10 +77,10 @@ const MainPage = () => {
       .catch(() => {});
     axios
       .get(
-        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=breakingNews`
+        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=breakingNews&status=online`
       )
       .then((data) => {
-        setbreakingNews(data);
+        setbreakingNews(data?.data);
         console.log(data);
       })
       .catch(() => {});
@@ -233,9 +233,10 @@ const MainPage = () => {
                   width="100%"
                   img={breakingNews?.data?.[0]?.image}
                   text={breakingNews?.data?.[0]?.title}
-                  id={breakingNews?.data?.[0]?.UserID}
+                  id={breakingNews?.data?.[0]?._id}
                 />
               </div>
+              {console.log(breakingNews)}
               <div
                 className="main-conatiner-image-2"
                 style={{
@@ -245,7 +246,7 @@ const MainPage = () => {
                 <ImageCard
                   img={breakingNews.data?.[1].image}
                   text={breakingNews.data?.[1].title}
-                  id={breakingNews.data?.[1].UserID}
+                  id={breakingNews.data?.[1]._id}
                   height="100%"
                   width="100%"
                 />
@@ -366,20 +367,19 @@ const MainPage = () => {
             </div>
             <div className="top-stories-all-cards">
               {console.log(topStories)}
-              {Article?.map((data, index) => {
+              {topStories?.map((data, index) => {
                 let title = data.title?.split(" ").join("-");
 
-                // Check if title is defined before rendering the StoriesCard
                 if (title) {
                   return (
                     <StoriesCard
                       data={data}
                       key={index}
                       OnPress={() =>
-                        navigation(`/details/${title}?id=${data._id}`)
+                        navigation(`/details/${title}?id=${data?._id}`)
                       }
-                      image={data.image}
-                      text={data.title}
+                      image={data?.image}
+                      text={data?.title}
                     />
                   );
                 } else {
@@ -395,7 +395,8 @@ const MainPage = () => {
           <div className="news-main-side-left">
             <div className="main-news-heading">{t("ln")}</div>
             <div className="news-cards-area container3">
-              {latestNews.map((data) => {
+              {console.log(breakingNews)}
+              {breakingNews.map((data) => {
                 let title = data?.title?.split(" ").join("-");
 
                 // Check if title is defined before rendering the NewsCard

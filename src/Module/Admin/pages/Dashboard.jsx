@@ -329,7 +329,7 @@ const Dashboard = () => {
       key: "discription",
       render: (text) => {
         let tt = "";
-        let times = text.length > 50 ? 50 : text.length;
+        let times = text ? (text.length > 50 ? 50 : text.length) : 0;
 
         for (let icon = 0; icon < times; icon++) {
           tt += text[icon];
@@ -419,13 +419,12 @@ const Dashboard = () => {
       dataIndex: "keyWord",
       render: (_, { keyWord }) => (
         <>
-          {keyWord.map((e, index) => {
-            return (
+          {Array.isArray(keyWord) &&
+            keyWord.map((e, index) => (
               <Tag color="blue" key={index}>
                 {e}
               </Tag>
-            );
-          })}
+            ))}
         </>
       ),
     },
