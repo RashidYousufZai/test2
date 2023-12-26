@@ -85,7 +85,6 @@ const MainPage = () => {
       })
       .catch(() => {});
   }, []);
-  console.log(topStories);
   useEffect(() => {
     axios
       .get(`${API_URL}/polls`)
@@ -231,9 +230,10 @@ const MainPage = () => {
                 <ImageCard
                   height="100%"
                   width="100%"
-                  img={breakingNews?.data?.[0]?.image}
-                  text={breakingNews?.data?.[0]?.title}
-                  id={breakingNews?.data?.[0]?._id}
+                  img={breakingNews?.[0]?.image}
+                  text={breakingNews?.[0]?.title}
+                  title={breakingNews?.[0]?.title}
+                  id={breakingNews?.[0]?._id}
                 />
               </div>
               {console.log(breakingNews)}
@@ -244,9 +244,10 @@ const MainPage = () => {
                 }}
               >
                 <ImageCard
-                  img={breakingNews.data?.[1].image}
-                  text={breakingNews.data?.[1].title}
-                  id={breakingNews.data?.[1]._id}
+                  img={breakingNews?.[1]?.image}
+                  text={breakingNews?.[1]?.title}
+                  title={breakingNews?.[0]?.title}
+                  id={breakingNews?.[1]?._id}
                   height="100%"
                   width="100%"
                 />
@@ -383,9 +384,8 @@ const MainPage = () => {
                     />
                   );
                 } else {
-                  // Handle the case where title is undefined or null
                   console.error("Title is undefined or null for data:", data);
-                  return null; // or handle it in a way that makes sense for your application
+                  return null;
                 }
               })}
             </div>
