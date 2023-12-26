@@ -330,7 +330,7 @@ const Upload = () => {
                     setImg(e.target.files[0]);
                     console.log(e.target.files[0]);
                   }}
-                  style={{ display: "none" }}
+                  style={{ display: "none", overflow: "hidden" }}
                   hidden={true}
                 />
                 <div
@@ -344,6 +344,7 @@ const Upload = () => {
                     backgroundColor: "rgba(0,0,0,0.1",
                     borderRadius: "10px",
                     marginBottom: 10,
+                    overflow: "hidden",
                   }}
                 >
                   {img == null ? (
@@ -356,6 +357,7 @@ const Upload = () => {
                         justifyContent: "center",
                         display: "flex",
                         color: "rgba(0,0,0,0.5)",
+                        overflow: "hidden",
                       }}
                     >
                       Upload Image or Video here
@@ -382,6 +384,7 @@ const Upload = () => {
                       width: "auto",
                       height: "200px",
                       borderRadius: "10px",
+                      overflow: "hidden",
                     }}
                     src={dataImage}
                   />
@@ -401,7 +404,7 @@ const Upload = () => {
                       setImg(e.target.files[0]);
                       console.log(e.target.files[0]);
                     }}
-                    style={{ display: "none" }}
+                    style={{ display: "none", overflow: "hidden" }}
                     hidden={true}
                   />
                   <div
@@ -415,6 +418,7 @@ const Upload = () => {
                       backgroundColor: "rgba(0,0,0,0.1",
                       borderRadius: "10px",
                       marginBottom: 10,
+                      overflow: "hidden",
                     }}
                   >
                     {img == null ? (
@@ -427,6 +431,7 @@ const Upload = () => {
                           justifyContent: "center",
                           display: "flex",
                           color: "rgba(0,0,0,0.5)",
+                          overflow: "hidden",
                         }}
                       >
                         Upload Image or Video here
@@ -437,6 +442,7 @@ const Upload = () => {
                           width: "auto",
                           height: "200px",
                           borderRadius: "10px",
+                          overflow: "hidden",
                         }}
                         src={URL.createObjectURL(img)}
                       />
