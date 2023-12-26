@@ -534,7 +534,7 @@ const Dashboard = () => {
           <Col span={6}>
             <Select
               style={{ width: "100%" }}
-              defaultValue="breakingNews"
+              defaultValue="all"
               onChange={(e) =>
                 setfilterItemResponse([
                   ...filterItemResponse,
