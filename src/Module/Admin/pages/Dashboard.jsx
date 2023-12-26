@@ -19,6 +19,7 @@ import { OnEdit as onEditContext } from "../../../Context";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../../API";
 import moment from "moment/moment";
+import { AntDesignOutlined, FileImageOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
 
@@ -261,45 +262,46 @@ const Dashboard = () => {
       dataIndex: "image",
       key: "image",
       render: (_, { type, image, _id }) => {
-        let bool = type == "img" ? true : false;
-        return bool ? (
-          <Image
-            width={100}
-            style={{
-              width: "100px",
-              height: "100px",
-            }}
-            src={image ? image : ""}
-            preview={{
-              visible: _id == visible,
-              src: image,
-              onVisibleChange: (value) => {
-                setVisible(visible ? "" : _id);
-              },
-            }}
-          />
-        ) : (
-          // <img
-          //   style={{ width: "100px", height: "100px" }}
-          //   src={image ? image : ""}
-          // />
-          <Image
-            width={100}
-            style={{
-              width: "100px",
-              height: "100px",
-            }}
-            src={image ? image : ""}
-            preview={{
-              imageRender: () => (
-                <video muted width="40%" controls src={image ? image : ""} />
-              ),
-              toolbarRender: () => null,
-            }}
-          />
+        const isImage = type === "img";
+
+        return (
+          <>
+            {isImage ? (
+              <Image
+                width={100}
+                style={{
+                  width: "100px",
+                  height: "100px",
+                }}
+                src={image || ""}
+                preview={{
+                  visible: _id === visible,
+                  src: image || "",
+                  onVisibleChange: (value) => {
+                    setVisible(visible ? "" : _id);
+                  },
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <FileImageOutlined
+                  style={{ fontSize: "24px", color: "#ccc" }}
+                />
+              </div>
+            )}
+          </>
         );
       },
     },
+
     {
       title: "Headline",
       dataIndex: "title",
